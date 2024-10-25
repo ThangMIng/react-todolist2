@@ -1,8 +1,8 @@
 .App {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
   text-align: center;
-  padding: 0 400px;
-  justify-content: center;
-  transition: background-color 0.3s, color 0.3s;
 }
 
 .App-logo {
@@ -76,16 +76,23 @@ h1 {
   background-color: #cbe1e4;
   margin-bottom: 10px;
 }
-.list{
-  margin-bottom: 10px;
-  border: 2px;
-}
+
 .todo{
   background-color: #cbe1e4;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
 }
+
 .todo-item{
   padding-bottom: 10px;
 }
+
+.todo-item.completed {
+  text-decoration: line-through;
+}
+
 .check{
   position: relative;
 }
@@ -96,8 +103,23 @@ button {
   border-radius: 5px;
   padding: 5px 10px;
   cursor: pointer;
-  
 }
+.btn-edit, .btn-x {
+  background-color: transparent;
+  border: none;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.btn-1 {
+  margin-top: 10px;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+}
+
+
 button:hover{
   color: #03010ded;
 }
@@ -108,9 +130,6 @@ button:hover{
 input[type='checkbox'] {
   margin-right: 10px;
 }
-.list-item{
-  padding: 0 80px;
-}
 .filter-buttons {
   display: flex;
   gap: 10px;
@@ -118,8 +137,35 @@ input[type='checkbox'] {
 .btn-tg{
   margin-top: 10px;
 }
+
 .list-item {
-  height: 400px;  
-  overflow-y: auto; 
+  border: 1px solid #ddd;
+  padding: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   margin-bottom: 20px;
+  height: 400px; 
+  overflow-y: auto;
+  border: 1px solid #ddd;
 }
+
+.list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  border: 2px;
+}
+
+.todo {
+  border-bottom: 1px solid #ccc; 
+  padding: 10px 0; 
+}
+
+.under {
+  margin-top: 20px;
+  text-align: center;
+}
+
