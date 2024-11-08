@@ -1,128 +1,97 @@
-import './App.css';
-import React, { useState, useRef, useContext, useEffect } from 'react';
-import TodoInput from './TodoInput/index';
-import TodoList from './TodoList/index';
-import { ThemeContext } from './Theme/ThemeContext';
-import ThemeToggle from './Theme/ThemeToggle';
-import api from './API/api';
+import React, { useState, useEffect, useContext, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchTodos,
+  addTodo,
+  updateTodo,
+  toggleTodoStatus,
+  deleteTodo,
+  setFilter,
+  clearAllTodos,
+} from "./redux/actions/todoActions";
+import { ThemeContext } from "./Theme/ThemeContext";
+import TodoInput from "./TodoInput";
+import TodoList from "./TodoList";
+import ThemeToggle from "./ThemeToggle";
 
 const FILTERS = {
-  ALL: 'all',
-  COMPLETED: 'completed',
-  INCOMPLETE: 'incomplete'
+  ALL: "all",
+  COMPLETED: "completed",
+  INCOMPLETE: "incomplete",
 };
 
 function App() {
-  const [data, setData] = useState([]);
-  const [filter, setFilter] = useState(FILTERS.ALL);
+  const dispatch = useDispatch();
+  const todos = useSelector((state) => state.todos.items);
+  const filter = useSelector((state) => state.filter.filter);
+  const { isDarkTheme } = useContext(ThemeContext);
+  const [inputValue, setInputValue] = useState("");
   const [editId, setEditId] = useState(null);
   const inputRef = useRef(null);
-  const { isDarkTheme } = useContext(ThemeContext);
-
-
-  const getData = async () => {
-    const data = await api.get("/todo-create");
-    setData(data?.data)
-  }
 
   useEffect(() => {
-    getData()
-  }, [])
+    dispatch(fetchTodos());
+  }, [dispatch]);
 
-  const handleAddTodo = async () => {
-    const name = inputRef.current.value.trim();
-    if (!name) return;
-
-    if (editId !== null) {
-      try {
-        const res = await api.put(`/todo-create/${editId}`, { name });
-        if (res?.status < 400 && res?.status >= 200) {
-          setData(prevData => prevData.map(item => item.id === editId ? res.data : item));
-        }
-      } catch (error) {
-        console.error('Error updating todo:', error);
-      }
-    } else {
-      try {
-        const res = await api.post(`/todo-create`, { name: name, status: false })
-        if (res?.status < 400 && res?.status >= 200) {
-          setData((prev) => [...prev, res?.data])
-        } else {
-          console.error('Error adding todo');
-        }
-      } catch (error) {
-        console.error('Error adding todo:', error);
-      }
-    }
-
-    setEditId(null);
-    inputRef.current.value = '';
-  };
-
-  const handleDeleteTodo = async (id) => {
-    try {
-      const res = await api.delete(`/todo-create/${id}`);
-      if (res?.status < 400 && res?.status >= 200){
-        setData(prevData => prevData.filter(item => item.id !== id));
-      } 
-    } catch (error) {
-      console.error('Error deleting todo:', error);
-    }
-  };
-
-  const handleToggleTodo = async (id) => {
-    const todo = data.find(item => item.id === id);
-    if (!todo) return;
-
-    try {
-      const response = await api.put(`/todo-create/${id}`, { status: !todo.status });
-      setData(prevData => prevData.map(item => item.id === id ? response.data : item));
-    } catch (error) {
-      console.error('Error toggling todo status:', error);
-    }
-  };
-
-  const handleClearAll = async () => {
-    try {
-      // const response = await api.get('/');
-      // const deletePromises = await response.data.map(todo => api.delete(`/${todo.id}`));
-      setData([]);
-    } catch (error) {
-      console.error('Error clearing todos:', error);
-    }
-  };
-
-  const startEditTodo = (id, name) => {
-    setEditId(id);
-    inputRef.current.value = name;
-  };
-
-  const filteredData = data.filter(item => {
+  const filteredTodos = todos.filter((item) => {
     if (filter === FILTERS.COMPLETED) return item.status;
     if (filter === FILTERS.INCOMPLETE) return !item.status;
     return true;
   });
 
+  const handleAddTodo = () => {
+    const name = inputValue.trim();
+    if (!name) return;
+
+    if (editId) {
+      dispatch(updateTodo(editId, name));
+      setEditId(null);
+    } else {
+      dispatch(addTodo(name));
+    }
+    setInputValue("");
+  };
+
+  const handleDeleteTodo = (id) => {
+    dispatch(deleteTodo(id));
+  };
+
+  const handleToggleTodo = (id) => {
+    dispatch(toggleTodoStatus(id));
+  };
+
+  const handleClearAll = () => {
+    dispatch(clearAllTodos());
+  };
+
+  const startEdit = (id, name) => {
+    setEditId(id);
+    setInputValue(name);
+  };
 
   useEffect(() => {
-    document.body.className = isDarkTheme ? 'dark-theme' : 'light-theme';
+    document.body.className = isDarkTheme ? "dark-theme" : "light-theme";
   }, [isDarkTheme]);
 
   return (
     <div className="App">
-      {/* <div style={{ position: "absolute" , top: 0, bottom: 0, right: 0, left: 0, backgroundColor: 'black', opacity: 0.3}}>Loading.....</div> */}
       <h1>todos</h1>
-      <TodoInput addTodo={handleAddTodo} inputRef={inputRef} />
+      <TodoInput
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        addTodo={handleAddTodo}
+        inputRef={inputRef}
+      />
+      <ThemeToggle />
       <TodoList
-        data={filteredData}
+        todos={filteredTodos}
         toggleTodo={handleToggleTodo}
         deleteTodo={handleDeleteTodo}
-        startEditTodo={startEditTodo}
-        setFilter={setFilter}
-        clearAll={handleClearAll}
+        startEdit={startEdit}
+        setFilter={(filter) => dispatch(setFilter(filter))}
         filter={filter}
+        clearAll={handleClearAll}
       />
-      <div className='btn-tg'><ThemeToggle /></div>
     </div>
   );
 }

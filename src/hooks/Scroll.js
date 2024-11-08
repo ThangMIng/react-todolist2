@@ -1,14 +1,20 @@
-import { useState, useEffect, useRef } from 'react';
-import '../App.css'
+import { useState, useEffect, useRef } from "react";
+import "../App.css";
 
-const useInfiniteScroll = () => {
+const useInfiniteScroll = (data) => {
+
+  console.log("data", data)
   const [isFetching, setIsFetching] = useState(false);
   const ref = useRef(null);
 
   const handleScroll = () => {
     if (!ref.current) return;
-    if (ref.current.scrollTop + ref.current.clientHeight >= ref.current.scrollHeight - 10) {
-      setIsFetching(true);
+    if (
+      ref.current.scrollTop + ref.current.clientHeight >=
+        ref.current.scrollHeight &&
+      !isFetching
+    ) {
+      setIsFetching(true)
     }
   };
 
@@ -16,8 +22,8 @@ const useInfiniteScroll = () => {
     const scrollableElement = ref.current;
     if (!scrollableElement) return;
 
-    scrollableElement.addEventListener('scroll', handleScroll);
-    return () => scrollableElement.removeEventListener('scroll', handleScroll);
+    scrollableElement.addEventListener("scroll", handleScroll);
+    return () => scrollableElement.removeEventListener("scroll", handleScroll);
   }, []);
 
   return [ref, isFetching, setIsFetching];
