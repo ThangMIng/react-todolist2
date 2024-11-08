@@ -9,6 +9,7 @@ import {
   setFilter,
   clearAllTodos,
 } from "./redux/actions/todoActions";
+
 import { ThemeContext } from "./Theme/ThemeContext";
 import TodoInput from "./TodoInput";
 import TodoList from "./TodoList";
