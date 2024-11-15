@@ -1,6 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
-import useInfiniteScroll from "../hooks/Scroll";
-import "../App.css";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  toggleTodoStatus,
+  deleteTodo,
+  updateTodo,
+  setFilter,
+  clearAllTodos,
+} from "../redux/actions/todoActions";
 
 const FILTERS = {
   ALL: "all",
@@ -8,104 +14,42 @@ const FILTERS = {
   INCOMPLETE: "incomplete",
 };
 
-function TodoList({
-  data = [],
-  toggleTodo,
-  deleteTodo,
-  startEditTodo,
-  clearAll,
-  setFilter,
-  filter,
-}) {
+function TodoList() {
+  const dispatch = useDispatch();
+  const todos = useSelector((state) => state.todos.items);
+  const filter = useSelector((state) => state.filter.filter);
 
-
-  const itemsPerPage = 5;
-  const [page, setPage] = useState(1);
-  const [paginatedData, setPaginatedData] = useState([]);
-
-  const [listRef, isFetching, setIsFetching] = useInfiniteScroll(data);
-
-  useEffect(() => {
-    debugger
-    if (isFetching && paginatedData.length < data.length) {
-      setTimeout(() => {
-        const newItems = data.slice(0, page * itemsPerPage);
-        setPaginatedData(newItems);
-        setIsFetching(false);
-        setPage((prevPage) => prevPage + 1);
-      }, 1000);
-    } else {
-      setIsFetching(false)
-    }
-  }, [isFetching]);
-
-  useEffect(() => {
-    setPage(1);
-    setPaginatedData(data.slice(0, itemsPerPage));
-  }, [filter, data]);
+  const filteredTodos = todos.filter((todo) => {
+    if (filter === FILTERS.COMPLETED) return todo.status;
+    if (filter === FILTERS.INCOMPLETE) return !todo.status;
+    return true;
+  });
 
   return (
-    <div className="list-item" style={{ height: "400px" }}>
-      <div className="list" ref={listRef}>
-        {paginatedData.map((item) => (
-          <div
-            className="todo"
-            key={item.id}
-            style={{ display: "flex", alignItems: "center" }}
-          >
-            <input
-              type="checkbox"
-              checked={item.status}
-              onChange={() => toggleTodo(item.id)}
-              style={{ marginRight: "10px" }}
-            />
-            <div
-              className="todo-item"
-              style={{
-                flex: 1,
-                cursor: "pointer",
-                textDecoration: item.status ? "line-through" : "none",
-              }}
-            >
-              {item.name}
-            </div>
-            <button
-              className="btn-edit"
-              onClick={() => startEditTodo(item.id, item.name)}
-            >
-              Sửa
-            </button>
-            <button className="btn-x" onClick={() => deleteTodo(item.id)}>
-              x
-            </button>
-          </div>
-        ))}
-        {isFetching && paginatedData.length < data.length && <div>Loading more items...</div>}
-      </div>
-      <div className="under">
-        <button className="btn-1" onClick={clearAll}>
-          Clear All
-        </button>
-        <div className="filter-buttons">
-          <button
-            className={filter === FILTERS.ALL ? "active" : ""}
-            onClick={() => setFilter(FILTERS.ALL)}
-          >
-            Tất cả
-          </button>
-          <button
-            className={filter === FILTERS.COMPLETED ? "active" : ""}
-            onClick={() => setFilter(FILTERS.COMPLETED)}
-          >
-            Đã làm
-          </button>
-          <button
-            className={filter === FILTERS.INCOMPLETE ? "active" : ""}
-            onClick={() => setFilter(FILTERS.INCOMPLETE)}
-          >
-            Chưa làm
+    <div className="list-item">
+      {filteredTodos.map((todo) => (
+        <div key={todo.id} className="todo">
+          <input
+            type="checkbox"
+            checked={todo.status}
+            onChange={() => dispatch(toggleTodoStatus(todo))}
+          />
+          <span>{todo.name}</span>
+          <button onClick={() => dispatch(deleteTodo(todo.id))}>Delete</button>
+          <button onClick={() => dispatch(updateTodo(todo.id, "New Name"))}>
+            Edit
           </button>
         </div>
+      ))}
+      <button onClick={() => dispatch(clearAllTodos())}>Clear All</button>
+      <div>
+        <button onClick={() => dispatch(setFilter(FILTERS.ALL))}>All</button>
+        <button onClick={() => dispatch(setFilter(FILTERS.COMPLETED))}>
+          Completed
+        </button>
+        <button onClick={() => dispatch(setFilter(FILTERS.INCOMPLETE))}>
+          Incomplete
+        </button>
       </div>
     </div>
   );
