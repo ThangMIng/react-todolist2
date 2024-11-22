@@ -7,7 +7,7 @@ import {
   TOGGLE_TODO_STATUS,
   DELETE_TODO,
   CLEAR_ALL_TODOS,
-  SET_FILTER_TODOS,
+  SET_FILTER,
   fetchTodosSuccess,
   addTodoSuccess,
   updateTodoSuccess,
@@ -29,7 +29,7 @@ function* fetchTodosSaga() {
 function* addTodoSaga(action) {
   try {
     const response = yield call(api.post, '/todo-create', {
-      name: action.payload.name,
+      name: action.payload,
       status: false,
     });
     yield put(addTodoSuccess(response.data)); 
@@ -92,7 +92,7 @@ function* todoSagas() {
   yield takeEvery(TOGGLE_TODO_STATUS, toggleTodoStatusSaga); 
   yield takeEvery(DELETE_TODO, deleteTodoSaga); 
   yield takeEvery(CLEAR_ALL_TODOS, clearAllTodosSaga); 
-  yield takeEvery(SET_FILTER_TODOS,setFilterSaga )
+  yield takeEvery(SET_FILTER,setFilterSaga )
 }
 
 export default todoSagas;

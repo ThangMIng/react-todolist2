@@ -1,10 +1,10 @@
 import React, { useEffect, useContext } from "react";
 import { useDispatch } from "react-redux";
-import { fetchTodos } from "./redux/actions/todoActions";
 import { ThemeContext } from "./Theme/ThemeContext";
 import TodoInput from "./TodoInput";
 import TodoList from "./TodoList";
-import ThemeToggle from "./ThemeToggle";
+import ThemeToggle from "./Theme/ThemeToggle";
+import { fetchTodos } from "./redux/actions/todoActions";
 
 function App() {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ function App() {
     <div className="App">
       <h1>todos</h1>
       <TodoInput />
-      <ThemeToggle/>
+      <ThemeToggle />
       <TodoList />
     </div>
   );

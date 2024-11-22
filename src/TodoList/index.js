@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   toggleTodoStatus,
   deleteTodo,
-  updateTodo,
   setFilter,
   clearAllTodos,
 } from "../redux/actions/todoActions";
@@ -24,6 +23,7 @@ function TodoList() {
     if (filter === FILTERS.INCOMPLETE) return !todo.status;
     return true;
   });
+  
 
   return (
     <div className="list-item">
@@ -36,11 +36,12 @@ function TodoList() {
           />
           <span>{todo.name}</span>
           <button onClick={() => dispatch(deleteTodo(todo.id))}>Delete</button>
-          <button onClick={() => dispatch(updateTodo(todo.id, "New Name"))}>
-            Edit
-          </button>
+
         </div>
       ))}
+
+      
+
       <button onClick={() => dispatch(clearAllTodos())}>Clear All</button>
       <div>
         <button onClick={() => dispatch(setFilter(FILTERS.ALL))}>All</button>
