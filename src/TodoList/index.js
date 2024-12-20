@@ -1,5 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import 'antd/dist/reset.css';
+import { Input, Button, List, Checkbox, Typography } from 'antd';
+import '../App.css'
 import {
   toggleTodoStatus,
   deleteTodo,
@@ -23,7 +26,7 @@ function TodoList() {
     if (filter === FILTERS.INCOMPLETE) return !todo.status;
     return true;
   });
-  
+
 
   return (
     <div className="list-item">
@@ -35,22 +38,24 @@ function TodoList() {
             onChange={() => dispatch(toggleTodoStatus(todo))}
           />
           <span>{todo.name}</span>
-          <button onClick={() => dispatch(deleteTodo(todo.id))}>Delete</button>
+          <Button className="btn-delete" onClick={() => dispatch(deleteTodo(todo.id))}>Delete</Button>
 
         </div>
       ))}
 
-      
-
-      <button onClick={() => dispatch(clearAllTodos())}>Clear All</button>
-      <div>
-        <button onClick={() => dispatch(setFilter(FILTERS.ALL))}>All</button>
-        <button onClick={() => dispatch(setFilter(FILTERS.COMPLETED))}>
+      <div className="btn-footer">
+        <Button  onClick={() => dispatch(clearAllTodos())}>
+          Clear All
+        </Button>
+        <Button  onClick={() => dispatch(setFilter(FILTERS.ALL))}>
+          All
+        </Button>
+        <Button  onClick={() => dispatch(setFilter(FILTERS.COMPLETED))}>
           Completed
-        </button>
-        <button onClick={() => dispatch(setFilter(FILTERS.INCOMPLETE))}>
+        </Button>
+        <Button  onClick={() => dispatch(setFilter(FILTERS.INCOMPLETE))}>
           Incomplete
-        </button>
+        </Button>
       </div>
     </div>
   );

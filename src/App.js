@@ -22,7 +22,7 @@ function App() {
     <div className="App">
       <h1>todos</h1>
       <TodoInput />
-      <ThemeToggle />
+      <ThemeToggle/>
       <TodoList />
     </div>
   );

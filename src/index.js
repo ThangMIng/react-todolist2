@@ -10,6 +10,9 @@ import store from './redux/store/store.js';
 import { BrowserRouter, Routes, Route } from "react-router";
 import TodoInput from './TodoInput';
 import { Link } from "react-router-dom";
+import 'antd/dist/reset.css';
+import { Input, Button, List, Checkbox, Typography } from 'antd';
+
 
 
 
@@ -19,16 +22,16 @@ root.render(
         <Provider store={store}>
             <ThemeProvider >
                 <div className='around'>
-                    <Link style={{ width: 100, height: 30, background: 'red' }} to={`/create/`}>
-                        <button>Edit</button>
+                    <Link style={{ width: 100, height: 30 }} to={`/create/`}>
+                        <Button className='btn-around'>Edit</Button>
                     </Link>
                     <Routes>
                         <Route path="/" element={<App />} />
-                        <Route path="/create" element={<TodoInput />} />
+                        <Route path="/create" element={<TodoInput/>} />
                     </Routes>
                 </div>
             </ThemeProvider>
-        </Provider>,
+        </Provider>
     </BrowserRouter>
 );
 

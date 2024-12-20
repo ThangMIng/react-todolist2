@@ -3,16 +3,13 @@ import "../App.css";
 
 const useInfiniteScroll = (data) => {
 
-  console.log("data", data)
   const [isFetching, setIsFetching] = useState(false);
   const ref = useRef(null);
 
   const handleScroll = () => {
     if (!ref.current) return;
     if (
-      ref.current.scrollTop + ref.current.clientHeight >=
-        ref.current.scrollHeight &&
-      !isFetching
+      ref.current.scrollTop + ref.current.clientHeight >= ref.current.scrollHeight &&!isFetching
     ) {
       setIsFetching(true)
     }
