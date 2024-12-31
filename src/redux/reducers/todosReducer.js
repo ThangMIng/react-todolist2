@@ -21,7 +21,7 @@ const todosReducer = (state = initialState, action) => {
     case ADD_TODO_SUCCESS:
       return {
         ...state,
-        items: [...state.items, action.payload],
+        items: [...state.items,  { ...action.payload, createdAt: new Date().toLocaleString(),  }],
       };
     case UPDATE_TODO_SUCCESS:
       return {

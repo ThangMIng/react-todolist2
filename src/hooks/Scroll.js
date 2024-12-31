@@ -1,29 +1,15 @@
-import { useState, useEffect, useRef } from "react";
-import "../App.css";
+import React from 'react';
 
-const useInfiniteScroll = (data) => {
-
-  const [isFetching, setIsFetching] = useState(false);
-  const ref = useRef(null);
-
+export const useScroll = (scrollRef, fetchData) => {
   const handleScroll = () => {
-    if (!ref.current) return;
-    if (
-      ref.current.scrollTop + ref.current.clientHeight >= ref.current.scrollHeight &&!isFetching
-    ) {
-      setIsFetching(true)
+    const element = scrollRef?.current;
+    if (element && element.scrollTop + element.clientHeight >= element.scrollHeight) {
+      fetchData();
     }
   };
 
-  useEffect(() => {
-    const scrollableElement = ref.current;
-    if (!scrollableElement) return;
+  return {
+    handleScroll
+  }
 
-    scrollableElement.addEventListener("scroll", handleScroll);
-    return () => scrollableElement.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  return [ref, isFetching, setIsFetching];
 };
-
-export default useInfiniteScroll;

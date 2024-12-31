@@ -28,7 +28,7 @@
 }
 
 .App-link {
-  color: #61dafb;
+  color: #cdd5d7;
 }
 
 @keyframes App-logo-spin {
@@ -74,12 +74,12 @@ h1 {
   width: 70%;
   padding: 10px;
   border: 1px;
-  background-color: #c9d4d6;
+  background-color: #9de4f0;
   margin-bottom: 10px;
 }
 
 .todo{
-  background-color: #cbe1e4;
+  background-color: #a6daee;
   display: flex;
   align-items: center;
   margin-bottom: 10px;
@@ -147,8 +147,9 @@ input[type='checkbox'] {
   border: 2px solid #61dafb;
 }
 .btn-delete{
-  position: relative;
-  left: 400px;
+  margin-right: 10px;
+  /* position: relative; */
+  /* left: 400px; */
   border: 1px solid #61dafb;
 }
 .switch{
@@ -220,4 +221,19 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+.title {
+  display: flex;
+  flex: 1;
+}
+.btn-search {
+  margin-left: 10px;
+}
+.createAt {
+  margin-right: 100px;
+  color: #888f92;
+}
+.input-check{
+  margin-left: 20px;
 }
